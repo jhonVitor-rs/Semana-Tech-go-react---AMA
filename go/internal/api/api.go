@@ -50,7 +50,7 @@ func NewHandler(q *pgstore.Queries) http.Handler {
 		MaxAge:           300,
 	}))
 
-	r.Get("/subscribe/{roomid}", a.handleSubscribe)
+	r.Get("/subscribe/{room_id}", a.handleSubscribe)
 
 	r.Route("/api", func(r chi.Router) {
 		r.Route("/rooms", func(r chi.Router) {
@@ -60,7 +60,7 @@ func NewHandler(q *pgstore.Queries) http.Handler {
 			r.Route("/{room_id}", func(r chi.Router) {
 				r.Get("/", a.handleGetRoom)
 
-				r.Route("/{room_id}/messages", func(r chi.Router) {
+				r.Route("/messages", func(r chi.Router) {
 					r.Post("/", a.handleCreateRoomMessage)
 					r.Get("/", a.handleGetRoomMessages)
 
