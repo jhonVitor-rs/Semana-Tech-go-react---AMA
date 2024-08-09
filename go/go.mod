@@ -9,7 +9,7 @@ require (
 )
 
 require (
-	github.com/go-chi/cors v1.2.1 // indirect
+	github.com/go-chi/cors v1.2.1
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 )

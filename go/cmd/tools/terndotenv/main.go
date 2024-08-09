@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log/slog"
 	"os/exec"
 
 	"github.com/joho/godotenv"
@@ -8,6 +9,7 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != nil {
+		slog.Warn("Failed to get emvironments variables on tern!")
 		panic(err)
 	}
 

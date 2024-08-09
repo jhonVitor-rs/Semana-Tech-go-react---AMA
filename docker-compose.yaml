@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine3.19
+    ports:
+      - ${WSRS_DATABASE_PORT:-5432}:5432
+    environment:
+      POSTGRES_USER: ${WSRS_DATABASE_USER}
+      POSTGRES_PASSWORD: ${WSRS_DATABASE_PASSWORD}
+      POSTGRES_DB: ${WSRS_DATABASE_NAME}
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  backend:
+    build: ./go
+    ports:
+      - "8080:8080"
+    environment:
+      WSRS_DATABASE_PORT: ${WSRS_DATABASE_PORT:-5432}
+      WSRS_DATABASE_USER: ${WSRS_DATABASE_USER}
+      WSRS_DATABASE_PASSWORD: ${WSRS_DATABASE_PASSWORD}
+      WSRS_DATABASE_NAME: ${WSRS_DATABASE_NAME}
+      WSRS_DATABASE_HOST: db
+    depends_on:
+      - db
+
+  frontend:
+    build: ./vite
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_APP_API_URL: ${VITE_APP_API_URL:-http://localhost:8080/api}
+    depends_on:
+      - backend
+
+volumes:
+  db:
+    driver: local

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,6 +17,7 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != err {
+		slog.Warn("Failed to get environments variables")
 		panic(err)
 	}
 
@@ -30,20 +32,23 @@ func main() {
 		os.Getenv("WSRS_DATABASE_NAME"),
 	))
 	if err != nil {
+		slog.Warn("Failed to create pool")
 		panic(err)
 	}
 
 	defer pool.Close()
 
 	if err := pool.Ping(ctx); err != nil {
+		slog.Warn("Failed to pool.Ping!")
 		panic(err)
 	}
 
 	handler := api.NewHandler(pgstore.New(pool))
 
 	go func() {
-		if err := http.ListenAndServe(":8080", handler); err != nil {
+		if err := http.ListenAndServe("0.0.0.0:8080", handler); err != nil {
 			if !errors.Is(err, http.ErrServerClosed) {
+				slog.Warn("Failed to get environments variables")
 				panic(err)
 			}
 		}

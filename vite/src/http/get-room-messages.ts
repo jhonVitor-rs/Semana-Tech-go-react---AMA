@@ -22,6 +22,8 @@ export async function getRoomMessages({ roomId }: GetRoomMessagesRequest): Promi
     answered: boolean
   }> = await response.json()
 
+  console.log(data)
+
   return {messages: data.map(message => {
     return {
       id: message.id,
